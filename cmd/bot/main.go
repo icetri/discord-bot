@@ -1,12 +1,12 @@
 package main
 
 import (
-	"github.com/discord-bot/internal/services/commands"
 	"log"
 	"os"
 	"os/signal"
 	"syscall"
 
+	"github.com/discord-bot/internal/services/commands"
 	"github.com/discord-bot/pkg/config"
 	"github.com/discord-bot/pkg/discord"
 )

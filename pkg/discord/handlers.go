@@ -1,10 +1,12 @@
 package discord
 
 import (
-	"github.com/bwmarrin/discordgo"
-	"github.com/discord-bot/internal/services/commands"
 	"log"
 	"strings"
+
+	"github.com/bwmarrin/discordgo"
+
+	"github.com/discord-bot/internal/services/commands"
 )
 
 const PREFIX = "/"

@@ -2,11 +2,11 @@ package discord
 
 import (
 	"fmt"
-	"github.com/discord-bot/internal/services/commands"
 	"log"
 
 	"github.com/bwmarrin/discordgo"
 
+	"github.com/discord-bot/internal/services/commands"
 	"github.com/discord-bot/pkg/config"
 )
 
