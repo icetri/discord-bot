@@ -6,7 +6,7 @@ import (
 
 	"github.com/bwmarrin/discordgo"
 
-	"github.com/discord-bot/internal/services/commands"
+	"github.com/discord-bot/internal/service"
 )
 
 const PREFIX = "/"
@@ -54,16 +54,17 @@ func (b *Bot) handlerCommand(session *discordgo.Session, message *discordgo.Mess
 		return
 	}
 
-	// TODO context
-	_ = struct {
-		command *commands.Command
-		name    string
-		channel *discordgo.Channel
-		guild   *discordgo.Guild
-	}{
-		command: command,
-		name:    name,
-		channel: channel,
-		guild:   guild,
-	}
+	ctx := service.NewContext(
+		session,
+		guild,
+		channel,
+		user,
+		command,
+		name,
+		args[1:],
+	)
+
+	c := *command
+
+	c(*ctx)
 }

@@ -6,18 +6,18 @@ import (
 
 	"github.com/bwmarrin/discordgo"
 
-	"github.com/discord-bot/internal/services/commands"
+	"github.com/discord-bot/internal/service"
 	"github.com/discord-bot/pkg/config"
 )
 
 type Bot struct {
 	dg       *discordgo.Session
-	commands *commands.Commands
+	commands *service.Commands
 	botID    string
 	ownerID  string
 }
 
-func NewBot(cfg *config.Config, commands *commands.Commands) (*Bot, error) {
+func NewBot(cfg *config.Config, commands *service.Commands) (*Bot, error) {
 	discord, err := discordgo.New(cfg.BotToken)
 	if err != nil {
 		return nil, fmt.Errorf("error creating discord session: %w", err)

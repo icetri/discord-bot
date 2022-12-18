@@ -1,4 +1,19 @@
-package commands
+package service
+
+type (
+	Commands struct {
+		cmds CmdMap
+	}
+
+	CmdMap map[string]CommandStruct
+
+	CommandStruct struct {
+		command Command
+		help    string
+	}
+
+	Command func(ctx Context)
+)
 
 func NewCommands() *Commands {
 	cmds := &Commands{
@@ -14,6 +29,7 @@ func (c Commands) GetCommands() CmdMap {
 	return c.cmds
 }
 
+// TODO pointer?
 func (c Commands) GetCommand(name string) (*Command, bool) {
 	cmd, found := c.cmds[name]
 	return &cmd.command, found
@@ -29,7 +45,7 @@ func (cs *CommandStruct) GetHelp() string {
 }
 
 func (c Commands) registerCommands() {
-	c.Register("help", HelpCommand, "TODO")
-	c.Register("play", PlayCommand, "TODO")
-	c.Register("stop", StopCommand, "TODO")
+	//	c.Register("help", HelpCommand, "TODO")
+	c.Register("play", Play, "TODO")
+	//	c.Register("stop", StopCommand, "TODO")
 }

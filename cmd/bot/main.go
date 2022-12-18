@@ -6,7 +6,7 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/discord-bot/internal/services/commands"
+	"github.com/discord-bot/internal/service"
 	"github.com/discord-bot/pkg/config"
 	"github.com/discord-bot/pkg/discord"
 )
@@ -18,7 +18,7 @@ func main() {
 		return
 	}
 
-	commands := commands.NewCommands()
+	commands := service.NewCommands()
 
 	dg, err := discord.NewBot(cfg, commands)
 	if err != nil {
