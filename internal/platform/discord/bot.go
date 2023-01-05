@@ -6,8 +6,8 @@ import (
 
 	"github.com/bwmarrin/discordgo"
 
+	"github.com/discord-bot/internal/config"
 	"github.com/discord-bot/internal/service"
-	"github.com/discord-bot/pkg/config"
 )
 
 type Bot struct {

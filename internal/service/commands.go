@@ -16,13 +16,9 @@ type (
 )
 
 func NewCommands() *Commands {
-	cmds := &Commands{
+	return &Commands{
 		cmds: make(CmdMap),
 	}
-
-	cmds.registerCommands()
-
-	return cmds
 }
 
 func (c Commands) GetCommands() CmdMap {
@@ -42,10 +38,4 @@ func (c Commands) Register(name string, command Command, helpMessage string) {
 
 func (cs *CommandStruct) GetHelp() string {
 	return cs.help
-}
-
-func (c Commands) registerCommands() {
-	//	c.Register("help", HelpCommand, "TODO")
-	c.Register("play", Play, "TODO")
-	//	c.Register("stop", StopCommand, "TODO")
 }
