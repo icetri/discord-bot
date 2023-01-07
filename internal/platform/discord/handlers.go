@@ -59,7 +59,7 @@ func (b *Bot) handlerCommand(session *discordgo.Session, message *discordgo.Mess
 		guild,
 		channel,
 		user,
-		command,
+		b.commands.GetCommands(),
 		name,
 		args[1:],
 	)

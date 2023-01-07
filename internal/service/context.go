@@ -5,14 +5,13 @@ import (
 )
 
 type Context struct {
-	Command      *Command
-	Channel      *discordgo.Channel
-	Discord      *discordgo.Session
-	VoiceChannel *discordgo.Channel
-	Guild        *discordgo.Guild
-	User         *discordgo.User
-	Name         string
-	Args         []string
+	Commands CmdMap
+	Channel  *discordgo.Channel
+	Discord  *discordgo.Session
+	Guild    *discordgo.Guild
+	User     *discordgo.User
+	Name     string
+	Args     []string
 }
 
 func NewContext(
@@ -20,36 +19,55 @@ func NewContext(
 	guild *discordgo.Guild,
 	channel *discordgo.Channel,
 	user *discordgo.User,
-	command *Command,
+	commands CmdMap,
 	name string,
 	args []string,
 ) *Context {
 	return &Context{
-		Command: command,
-		Channel: channel,
-		Discord: discord,
-		Guild:   guild,
-		User:    user,
-		Name:    name,
-		Args:    args,
+		Commands: commands,
+		Channel:  channel,
+		Discord:  discord,
+		Guild:    guild,
+		User:     user,
+		Name:     name,
+		Args:     args,
 	}
 }
 
 func (ctx Context) GetVoiceChannel() *discordgo.Channel {
-	if ctx.VoiceChannel != nil {
-		return ctx.VoiceChannel
-	}
-
 	for _, state := range ctx.Guild.VoiceStates {
 		if state.UserID != ctx.User.ID {
 			continue
 		}
 
 		// TODO err logger?
-		ctx.VoiceChannel, _ = ctx.Discord.State.Channel(state.ChannelID)
+		vc, err := ctx.Discord.State.Channel(state.ChannelID)
+		if err != nil {
+			return nil
+		}
 
-		return ctx.VoiceChannel
+		return vc
 	}
 
 	return nil
+}
+
+// TODO err logger
+func (ctx Context) Reply(content string) *discordgo.Message {
+	msg, err := ctx.Discord.ChannelMessageSend(ctx.Channel.ID, content)
+	if err != nil {
+		return nil
+	}
+
+	return msg
+}
+
+// TODO err logger
+func (ctx Context) JoinVoiceChannel(guildID, voiceChannelID string) (*discordgo.VoiceConnection, error) {
+	voiceSession, err := ctx.Discord.ChannelVoiceJoin(guildID, voiceChannelID, false, true)
+	if err != nil {
+		return nil, err
+	}
+
+	return voiceSession, nil
 }

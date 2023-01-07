@@ -47,7 +47,7 @@ func Run() {
 }
 
 func registerCommands() {
-	//	c.Register("help", HelpCommand, "TODO")
+	cmds.Register("help", commands.Help, "TODO")
 	cmds.Register("play", commands.Play, "TODO")
-	//	c.Register("stop", StopCommand, "TODO")
+	cmds.Register("stop", commands.Stop, "TODO")
 }
