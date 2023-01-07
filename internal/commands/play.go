@@ -6,11 +6,13 @@ import "github.com/discord-bot/internal/service"
 func Play(ctx service.Context) {
 	vc := ctx.GetVoiceChannel()
 	if vc == nil {
+		ctx.Reply("You must be in a voice channel")
 		return
 	}
 
-	_, err := ctx.JoinVoiceChannel(ctx.Guild.ID, vc.ID)
-	if err != nil {
+	voiceConnection := ctx.JoinVoiceChannel(ctx.Guild.ID, vc.ID)
+	if voiceConnection == nil {
+		ctx.Reply("An error occurred!")
 		return
 	}
 

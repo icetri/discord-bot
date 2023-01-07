@@ -1,7 +1,6 @@
 package app
 
 import (
-	"log"
 	"os"
 	"os/signal"
 	"syscall"
@@ -10,6 +9,7 @@ import (
 	"github.com/discord-bot/internal/config"
 	"github.com/discord-bot/internal/platform/discord"
 	"github.com/discord-bot/internal/service"
+	"github.com/discord-bot/pkg/logger"
 )
 
 var (
@@ -17,6 +17,8 @@ var (
 )
 
 func Run() {
+	log := logger.New()
+
 	cfg, err := config.Init()
 	if err != nil {
 		log.Fatal(err)
@@ -26,7 +28,7 @@ func Run() {
 	cmds = service.NewCommands()
 	registerCommands()
 
-	dg, err := discord.NewBot(cfg, cmds)
+	dg, err := discord.NewBot(cfg, cmds, log)
 	if err != nil {
 		log.Fatal(err)
 		return

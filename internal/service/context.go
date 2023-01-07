@@ -2,9 +2,11 @@ package service
 
 import (
 	"github.com/bwmarrin/discordgo"
+	"github.com/sirupsen/logrus"
 )
 
 type Context struct {
+	logger   logrus.FieldLogger
 	Commands CmdMap
 	Channel  *discordgo.Channel
 	Discord  *discordgo.Session
@@ -22,6 +24,7 @@ func NewContext(
 	commands CmdMap,
 	name string,
 	args []string,
+	logger logrus.FieldLogger,
 ) *Context {
 	return &Context{
 		Commands: commands,
@@ -31,6 +34,7 @@ func NewContext(
 		User:     user,
 		Name:     name,
 		Args:     args,
+		logger:   logger,
 	}
 }
 
@@ -40,34 +44,34 @@ func (ctx Context) GetVoiceChannel() *discordgo.Channel {
 			continue
 		}
 
-		// TODO err logger?
-		vc, err := ctx.Discord.State.Channel(state.ChannelID)
+		voiceChannel, err := ctx.Discord.State.Channel(state.ChannelID)
 		if err != nil {
+			ctx.logger.Errorf("get channel: %v", err)
 			return nil
 		}
 
-		return vc
+		return voiceChannel
 	}
 
 	return nil
 }
 
-// TODO err logger
 func (ctx Context) Reply(content string) *discordgo.Message {
 	msg, err := ctx.Discord.ChannelMessageSend(ctx.Channel.ID, content)
 	if err != nil {
+		ctx.logger.Errorf("channel message send: %v", err)
 		return nil
 	}
 
 	return msg
 }
 
-// TODO err logger
-func (ctx Context) JoinVoiceChannel(guildID, voiceChannelID string) (*discordgo.VoiceConnection, error) {
-	voiceSession, err := ctx.Discord.ChannelVoiceJoin(guildID, voiceChannelID, false, true)
+func (ctx Context) JoinVoiceChannel(guildID, voiceChannelID string) *discordgo.VoiceConnection {
+	voiceConnection, err := ctx.Discord.ChannelVoiceJoin(guildID, voiceChannelID, false, true)
 	if err != nil {
-		return nil, err
+		ctx.logger.Errorf("channel voice join: %v", err)
+		return nil
 	}
 
-	return voiceSession, nil
+	return voiceConnection
 }

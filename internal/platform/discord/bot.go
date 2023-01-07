@@ -2,28 +2,30 @@ package discord
 
 import (
 	"fmt"
-	"log"
 
 	"github.com/bwmarrin/discordgo"
+	"github.com/sirupsen/logrus"
 
 	"github.com/discord-bot/internal/config"
 	"github.com/discord-bot/internal/service"
 )
 
 type Bot struct {
+	logger   logrus.FieldLogger
 	dg       *discordgo.Session
 	commands *service.Commands
 	botID    string
 	ownerID  string
 }
 
-func NewBot(cfg *config.Config, commands *service.Commands) (*Bot, error) {
+func NewBot(cfg *config.Config, commands *service.Commands, logger logrus.FieldLogger) (*Bot, error) {
 	discord, err := discordgo.New(cfg.BotToken)
 	if err != nil {
 		return nil, fmt.Errorf("error creating discord session: %w", err)
 	}
 
 	return &Bot{
+		logger:   logger,
 		dg:       discord,
 		ownerID:  cfg.OwnerID,
 		commands: commands,
@@ -36,7 +38,7 @@ func (b *Bot) ping() error {
 		return fmt.Errorf("error with take user details: %w", err)
 	}
 
-	log.Printf("Authorization user: %s", user.Username)
+	b.logger.Infof("Authorization user: %s", user.Username)
 	b.botID = user.ID
 
 	return nil

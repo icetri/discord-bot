@@ -4,12 +4,10 @@ import (
 	"github.com/discord-bot/internal/service"
 )
 
-// TODO err logger
 func Stop(ctx service.Context) {
-	// Проверка что уже существует в канале
-
 	vc := ctx.GetVoiceChannel()
 	if vc == nil {
+		ctx.Reply("You must be in a voice channel")
 		return
 	}
 
@@ -23,6 +21,7 @@ func Stop(ctx service.Context) {
 	voice.Close()
 
 	if err := voice.Disconnect(); err != nil {
+		ctx.Reply("An error occurred!")
 		return
 	}
 }

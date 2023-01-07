@@ -1,7 +1,6 @@
 package discord
 
 import (
-	"log"
 	"strings"
 
 	"github.com/bwmarrin/discordgo"
@@ -44,13 +43,13 @@ func (b *Bot) handlerCommand(session *discordgo.Session, message *discordgo.Mess
 
 	channel, err := b.dg.State.Channel(message.ChannelID)
 	if err != nil {
-		log.Printf("err with getting channel: %v", err)
+		b.logger.Errorf("err with getting channel: %v", err)
 		return
 	}
 
 	guild, err := b.dg.State.Guild(channel.GuildID)
 	if err != nil {
-		log.Printf("err with getting guild: %v", err)
+		b.logger.Errorf("err with getting guild: %v", err)
 		return
 	}
 
@@ -62,6 +61,7 @@ func (b *Bot) handlerCommand(session *discordgo.Session, message *discordgo.Mess
 		b.commands.GetCommands(),
 		name,
 		args[1:],
+		b.logger,
 	)
 
 	c := *command
