@@ -28,5 +28,5 @@ func newTextFormatter() *logrus.TextFormatter {
 }
 
 func callerPrettyfier(frame *runtime.Frame) (string, string) {
-	return "", fmt.Sprintf("%s: %d", path.Base(frame.File), frame.Line)
+	return fmt.Sprintf("%s()", path.Base(frame.Function)), fmt.Sprintf("%s: %d", path.Base(frame.File), frame.Line)
 }
